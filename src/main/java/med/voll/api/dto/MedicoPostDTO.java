@@ -7,7 +7,7 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import med.voll.api.enums.EspecialidadeMedico;
 
-public record MedicoDTO (
+public record MedicoPostDTO(
         @NotBlank
         String nome,
         @NotBlank
