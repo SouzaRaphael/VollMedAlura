@@ -1,4 +1,11 @@
 package med.voll.api.dto;
 
-public class PacientePutDTO {
-}
+import jakarta.validation.constraints.NotNull;
+
+public record PacientePutDTO (
+        @NotNull
+        Long id,
+        String nome,
+        String telefone,
+        EnderecoDTO endereco
+) {}
