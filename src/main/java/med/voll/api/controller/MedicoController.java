@@ -1,12 +1,12 @@
-package med.voll.api.controller;
+package med.voll.api.domain.controller;
 
 import jakarta.validation.Valid;
-import med.voll.api.dto.MedicoGetDTO;
-import med.voll.api.dto.MedicoPostDTO;
-import med.voll.api.dto.MedicoPutDTO;
-import med.voll.api.dto.MedicoReturnDTO;
-import med.voll.api.models.Medico;
-import med.voll.api.repository.MedicoRepository;
+import med.voll.api.domain.dto.MedicoGetDTO;
+import med.voll.api.domain.dto.MedicoPostDTO;
+import med.voll.api.domain.dto.MedicoPutDTO;
+import med.voll.api.domain.dto.MedicoReturnDTO;
+import med.voll.api.domain.models.Medico;
+import med.voll.api.domain.repository.MedicoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
