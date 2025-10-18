@@ -1,4 +1,4 @@
-package med.voll.api.domain.controller;
+package med.voll.api.controller;
 
 import jakarta.validation.Valid;
 import med.voll.api.domain.dto.PacienteGetDTO;
@@ -19,7 +19,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 import java.net.URI;
 
 @RestController
-@RequestMapping("pacientes")
+@RequestMapping("/pacientes")
 public class PacienteController {
 
     @Autowired
