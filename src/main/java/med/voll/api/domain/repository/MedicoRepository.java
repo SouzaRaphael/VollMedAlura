@@ -1,7 +1,5 @@
 package med.voll.api.domain.repository;
 
-import jakarta.validation.constraints.Future;
-import jakarta.validation.constraints.NotNull;
 import med.voll.api.domain.enums.EspecialidadeMedico;
 import med.voll.api.domain.models.Medico;
 import org.springframework.data.domain.Page;
@@ -27,4 +25,11 @@ public interface MedicoRepository extends JpaRepository<Medico, Long> {
                 limit 1
             """)
     Medico escolherMedicoAleatorioData(EspecialidadeMedico especialidade, LocalDateTime data);
+
+    @Query("""
+            select m.ativo
+            from Medico m
+            where m.id = :id
+            """)
+    boolean findAtivoById(Long idMedico);
 }

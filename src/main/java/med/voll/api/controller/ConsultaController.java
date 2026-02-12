@@ -3,7 +3,7 @@ package med.voll.api.controller;
 import jakarta.validation.Valid;
 import med.voll.api.domain.dto.AgendamentoConsultaDTO;
 import med.voll.api.domain.dto.DetalhamentoConsultaDTO;
-import med.voll.api.service.ConsultaService;
+import med.voll.api.service.consulta.ConsultaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
