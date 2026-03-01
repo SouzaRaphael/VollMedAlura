@@ -1,14 +1,18 @@
-package med.voll.api.service.consulta;
+package med.voll.api.service;
 
 import med.voll.api.domain.dto.AgendamentoConsultaDTO;
+import med.voll.api.domain.dto.DetalhamentoConsultaDTO;
 import med.voll.api.domain.models.Consulta;
 import med.voll.api.domain.models.Medico;
 import med.voll.api.domain.repository.ConsultaRepository;
 import med.voll.api.domain.repository.MedicoRepository;
 import med.voll.api.domain.repository.PacienteRepository;
 import med.voll.api.infra.exception.ValidacaoException;
+import med.voll.api.service.validacao.consulta.agendamento.IValidacaoConsultaAgendamento;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class ConsultaService {
@@ -22,7 +26,10 @@ public class ConsultaService {
     @Autowired
     private PacienteRepository pacienteRepository;
 
-    public void agendar(AgendamentoConsultaDTO dto) {
+    @Autowired
+    private List<IValidacaoConsultaAgendamento> validadores;
+
+    public DetalhamentoConsultaDTO agendar(AgendamentoConsultaDTO dto) {
         if (!pacienteRepository.existsById(dto.idPaciente())) {
             throw new ValidacaoException("Id do paciente informado nao existe");
         }
@@ -31,10 +38,19 @@ public class ConsultaService {
             throw new ValidacaoException("Id do medico informado nao existe");
         }
 
+        validadores.forEach(v -> v.validar(dto));
+
         var paciente = pacienteRepository.getReferenceById(dto.idPaciente());
+
         var medico = escolherMedico(dto);
+        if (medico == null) {
+            throw new ValidacaoException("Nao existe medico disponivel nessa data");
+        }
+
         Consulta consulta = new Consulta(null, medico, paciente, dto.data());
         consultaRepository.save(consulta);
+
+        return new DetalhamentoConsultaDTO(consulta);
     }
 
     private Medico escolherMedico(AgendamentoConsultaDTO dto) {

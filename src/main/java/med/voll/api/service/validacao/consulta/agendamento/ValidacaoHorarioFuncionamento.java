@@ -1,11 +1,13 @@
-package med.voll.api.service.consulta;
+package med.voll.api.service.validacao.consulta.agendamento;
 
 import med.voll.api.domain.dto.AgendamentoConsultaDTO;
 import med.voll.api.infra.exception.ValidacaoException;
+import org.springframework.stereotype.Component;
 
 import java.time.DayOfWeek;
 
-public class ValidacaoHorarioFuncionamento {
+@Component
+public class ValidacaoHorarioFuncionamento implements IValidacaoConsultaAgendamento {
     public void validar(AgendamentoConsultaDTO dto) {
         var diaConsulta = dto.data().getDayOfWeek();
         var horaConsulta = dto.data().getHour();
