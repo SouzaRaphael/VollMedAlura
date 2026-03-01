@@ -1,6 +1,7 @@
 package med.voll.api.service;
 
 import med.voll.api.domain.dto.AgendamentoConsultaDTO;
+import med.voll.api.domain.dto.CancelamentoConsultaDTO;
 import med.voll.api.domain.dto.DetalhamentoConsultaDTO;
 import med.voll.api.domain.models.Consulta;
 import med.voll.api.domain.models.Medico;
@@ -9,6 +10,7 @@ import med.voll.api.domain.repository.MedicoRepository;
 import med.voll.api.domain.repository.PacienteRepository;
 import med.voll.api.infra.exception.ValidacaoException;
 import med.voll.api.service.validacao.consulta.agendamento.IValidacaoConsultaAgendamento;
+import med.voll.api.service.validacao.consulta.cancelamento.IValidacaoConsultaCancelamento;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -27,7 +29,10 @@ public class ConsultaService {
     private PacienteRepository pacienteRepository;
 
     @Autowired
-    private List<IValidacaoConsultaAgendamento> validadores;
+    private List<IValidacaoConsultaAgendamento> validadoresAgendamento;
+
+    @Autowired
+    private List<IValidacaoConsultaCancelamento> validadoresCancelamento;
 
     public DetalhamentoConsultaDTO agendar(AgendamentoConsultaDTO dto) {
         if (!pacienteRepository.existsById(dto.idPaciente())) {
@@ -38,7 +43,7 @@ public class ConsultaService {
             throw new ValidacaoException("Id do medico informado nao existe");
         }
 
-        validadores.forEach(v -> v.validar(dto));
+        validadoresAgendamento.forEach(v -> v.validar(dto));
 
         var paciente = pacienteRepository.getReferenceById(dto.idPaciente());
 
@@ -47,10 +52,21 @@ public class ConsultaService {
             throw new ValidacaoException("Nao existe medico disponivel nessa data");
         }
 
-        Consulta consulta = new Consulta(null, medico, paciente, dto.data());
+        Consulta consulta = new Consulta(null, medico, paciente, dto.data(), false, null);
         consultaRepository.save(consulta);
 
         return new DetalhamentoConsultaDTO(consulta);
+    }
+
+    public void cancelar(CancelamentoConsultaDTO dto) {
+        if (!consultaRepository.existsById(dto.idConsulta())) {
+            throw new ValidacaoException("Id da consulta informado não existe!");
+        }
+
+        validadoresCancelamento.forEach(v -> v.validar(dto));
+
+        var consulta = consultaRepository.getReferenceById(dto.idConsulta());
+        consulta.cancelar(dto.motivo());
     }
 
     private Medico escolherMedico(AgendamentoConsultaDTO dto) {
