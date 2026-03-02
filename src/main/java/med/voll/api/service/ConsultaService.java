@@ -52,7 +52,7 @@ public class ConsultaService {
             throw new ValidacaoException("Nao existe medico disponivel nessa data");
         }
 
-        Consulta consulta = new Consulta(null, medico, paciente, dto.data(), false, null);
+        Consulta consulta = new Consulta(null, medico, paciente, dto.data(), null);
         consultaRepository.save(consulta);
 
         return new DetalhamentoConsultaDTO(consulta);
